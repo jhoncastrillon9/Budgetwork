@@ -29,5 +29,6 @@ namespace Badgetwork.Infrastructure.Context
         }
 
         public DbSet<Badget> Badget { get; set; }
+        public DbSet<BadgetItem> BadgetItem { get; set; }
     }
 }

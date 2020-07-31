@@ -4,14 +4,16 @@ using Badgetwork.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Badgetwork.Infrastructure.Migrations
 {
     [DbContext(typeof(BadgetworkContext))]
-    partial class BadgetworkContextModelSnapshot : ModelSnapshot
+    [Migration("20200731040601_Add-table-badgetitems")]
+    partial class Addtablebadgetitems
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -72,13 +74,13 @@ namespace Badgetwork.Infrastructure.Migrations
                         .HasMaxLength(500);
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal (18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
                     b.Property<decimal>("Subtotal")
-                        .HasColumnType("decimal (18,4)");
+                        .HasColumnType("decimal(18,2)");
 
                     b.HasKey("BadgetItemId");
 

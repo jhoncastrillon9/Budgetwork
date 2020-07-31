@@ -149,6 +149,7 @@
   <ItemGroup>
     <Compile Include="Context\BadgetworkContext.cs" />
     <Compile Include="Entities\Badget.cs" />
+    <Compile Include="Entities\BadgetItem.cs" />
     <Compile Include="Migrations\20200719202758_initial_create.cs" />
     <Compile Include="Migrations\20200719202758_initial_create.designer.cs">
       <DependentUpon>20200719202758_initial_create.cs</DependentUpon>
@@ -164,6 +165,14 @@
     <Compile Include="Migrations\20200720001040_AddSpecificationDecimal.cs" />
     <Compile Include="Migrations\20200720001040_AddSpecificationDecimal.designer.cs">
       <DependentUpon>20200720001040_AddSpecificationDecimal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200731040601_Add-table-badgetitems.cs" />
+    <Compile Include="Migrations\20200731040601_Add-table-badgetitems.designer.cs">
+      <DependentUpon>20200731040601_Add-table-badgetitems.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200731041015_Add-decimal-requires.cs" />
+    <Compile Include="Migrations\20200731041015_Add-decimal-requires.designer.cs">
+      <DependentUpon>20200731041015_Add-decimal-requires.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\BadgetworkContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

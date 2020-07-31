@@ -1,0 +1,104 @@
+﻿@page "/Budget"
+@using Entities = Badgetwork.Infrastructure.Entities;
+@inject BaseService<Entities.Badget> _BadgetService
+@inject NotificationService notificationService
+@inject DialogService dialogService
+@inject NavigationManager NavManager
+
+<div class="row" style="justify-content: space-between;">
+    <h1>Mis Presupuestos de Obra</h1>
+    <RadzenButton Click="@(() => NavManager.NavigateTo("/BudgetCreate"))" Text="Nuevo Presupuesto" Style="margin-bottom: 20px; width: 150px" ButtonStyle="ButtonStyle.Secondary" />
+</div>
+
+<br />
+
+@if (Badgets == null)
+{
+    <p>Cargando...</p>
+}
+else
+{
+
+    @if (Badgets.Count() == 0)
+    {
+        <p>No hay presupuestos creados.</p>
+    }
+    else
+    {
+        <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="10"
+                    AllowSorting="true" Data="@Badgets" TItem="Entities.Badget" ColumnWidth="200px">
+            <Columns>
+                <RadzenGridColumn TItem="Entities.Badget" Property="BadgetId" Title="Id" />
+                <RadzenGridColumn TItem="Entities.Badget" Property="Name" Title="Presupuesto" />
+                <RadzenGridColumn TItem="Entities.Badget" Property="Total" Title="Total">
+                    <Template Context="data">
+                        @String.Format(new System.Globalization.CultureInfo("es-CO"), "{0:C}", data.Total)
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn TItem="Entities.Badget" Property="DateCreation" Title="Fecha de Creación">
+                    <Template Context="data">
+                        @String.Format("{0:d}", data.DateCreation)
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn TItem="Entities.Badget" Context="Badgets" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
+                    <Template Context="order">
+                        <RadzenButton ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Text="Editar" Click="@(args => ShowSimpleDialog(order))">
+                        </RadzenButton>
+                    </Template>
+                </RadzenGridColumn>
+                <RadzenGridColumn TItem="Entities.Badget" Context="Badgets" Bubble="false" Filterable="false" Sortable="false" TextAlign="TextAlign.Center" Width="70px">
+                    <Template Context="order">
+                        <RadzenButton ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Text="Eliminar" Click="@(args => ShowSimpleDialog(order))">
+                        </RadzenButton>
+                    </Template>
+                </RadzenGridColumn>
+            </Columns>
+        </RadzenGrid>
+    }
+
+}
+
+
+
+
+@code {
+
+    private IEnumerable<Entities.Badget>
+    Badgets;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            Badgets = await _BadgetService.GetAll();
+
+        }
+        catch (global::System.Exception)
+        {
+
+            throw;
+        }
+    }
+
+
+    private async Task DeleteRow(Entities.Badget badget, DialogService ds)
+    {
+        ds.Close();
+        await _BadgetService.Delete(badget);
+        Badgets = await _BadgetService.GetAll();
+        notificationService.Notify(new NotificationMessage() { Severity = NotificationSeverity.Success, Summary = "Upps...", Detail = $"El presupuesto {badget.BadgetName} fue eliminado exitosamente", Duration = 4000 });
+
+    }
+
+    private async Task ShowSimpleDialog(Entities.Badget badget) => await dialogService.OpenAsync("Cuidado!", ds =>
+    @<RadzenCard Style="padding: 10px; border: 0px !important;">
+        <p Style="margin-bottom: 10px;">Estas seguro de eliminar el presupuesto de obra?</p>
+        <div class="row">
+            <div class="col-md-12">
+                <RadzenButton Text="Si, eliminar" Click="()=> DeleteRow(badget, ds)" ButtonStyle="ButtonStyle.Success" Style="margin-bottom: 10px; width: 150px" />
+                <RadzenButton Text="Cancelar" Click="()=> ds.Close(false)" ButtonStyle="ButtonStyle.Light" Style="margin-bottom: 10px; width: 150px" />
+            </div>
+        </div>
+    </RadzenCard>);
+
+}

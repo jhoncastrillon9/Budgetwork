@@ -13,8 +13,19 @@ namespace Badgetwork.Infrastructure.Entities
     {
         [Key]
         public int BadgetId { get; set; }
-        public string Name { get; set; }
+        [MaxLength(50, ErrorMessage = "Máximo de 50 caracteres")]
+        public string BadgetName { get; set; }
+        [MaxLength(50, ErrorMessage = "Máximo de 50 caracteres")]
+        public string CustomerName { get; set; }
+        [MaxLength(50, ErrorMessage = "Máximo de 50 caracteres")]
+        public string TypeDocument { get; set; }
+        [MaxLength(50, ErrorMessage = "Máximo de 50 caracteres")]
+        public string Document { get; set; }
+        [MaxLength(50, ErrorMessage = "Máximo de 50 caracteres")]
+        public string Address { get; set; }
+        [Column(TypeName = "decimal (18,4)")]
         public decimal Total { get; set; }
-        public DateTime DateCreation { get; set; }        
+        public DateTime DateCreation { get; set; }
+        public virtual ICollection<BadgetItem> BadgetItems { get; set; }
     }
 }

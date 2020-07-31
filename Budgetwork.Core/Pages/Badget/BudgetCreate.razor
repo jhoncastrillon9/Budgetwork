@@ -1,0 +1,86 @@
+﻿@page "/BudgetCreate"
+@using Entities = Badgetwork.Infrastructure.Entities;
+@inject BaseService<Entities.Badget> _BadgetService
+@inject NotificationService notificationService
+@inject DialogService dialogService
+@inject NavigationManager NavManager
+
+<h1>Crear nuevo presupuesto</h1>
+<br />
+
+<div class="row" style="margin-right: 0px; margin-left: 0px;">
+    <div style="margin-right: 15px;">
+        Nombre del presupuesto:
+        <RadzenTextBox @bind-Value="@entity.BadgetName" MaxLength="50" Style="margin-bottom: 20px" />
+    </div>
+</div>
+<h3 style="font-weight:600">Datos del Cliente</h3>
+<div class="row" style="margin-right: 0px; margin-left: 0px;">
+    <div style="margin-right: 15px;">
+        Nombre:
+        <RadzenTextBox @bind-Value="@entity.CustomerName" MaxLength="50" Style="margin-bottom: 20px" />
+    </div>
+    <div style="margin-right: 5px; padding-top: 8px;">
+        Tipo de Documento:
+    </div>
+    <div style="margin-right: 15px;">      
+        <RadzenDropDown Data="@(typesDocument)"
+                        TextProperty="typesDocument" @bind-Value="@entity.TypeDocument" ValueProperty="typesDocument" Style="margin-bottom: 20px" />
+    </div>
+    <div style="margin-right: 15px;">
+        Documento:
+        <RadzenTextBox @bind-Value="@entity.Document" MaxLength="50" Style="margin-bottom: 20px" />
+    </div>
+    <div style="margin-right: 15px;">
+        Dirección:
+        <RadzenTextBox @bind-Value="@entity.Address" MaxLength="50" Style="margin-bottom: 20px" />
+    </div>
+</div>
+<h3 style="font-weight:600">Items</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Precio Unitario</th>
+            <th scope="col">Subtotal</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{int loop = 0; }
+        @foreach (var item in badgetItems.ToList())
+        {
+            loop++;
+            <tr>
+                <th scope="row">loop</th>
+                <td>@item.Descripcion</td>
+                <td>@item.Quantity</td>
+                <td>@item.Price</td>
+                <td>@(item.Price*item.Quantity)</td>
+            </tr>
+        }
+
+        <tr>
+            <th scope="row"></th>
+            <td> </td>
+            <td> </td>
+            <td align="right" style="font-weight:600">Subtotal:</td>
+            <td>$@badgetItems.Sum(x=> x.Subtotal)</td>
+        </tr>
+    </tbody>
+</table>
+
+
+
+
+@code {
+    private List<string> typesDocument = new List<string>() { "Cedula de Ciudadania", "Cedula de Extranjeria", "Pasaporte" };
+    private Entities.Badget entity = new Entities.Badget();
+    private List<Entities.BadgetItem> badgetItems = new List<Entities.BadgetItem>();
+
+
+
+}

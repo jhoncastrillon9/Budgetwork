@@ -14,7 +14,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
+using Radzen;
 
 namespace Budgetwork.Core
 {
@@ -31,12 +31,15 @@ namespace Budgetwork.Core
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();
-            services.AddServerSideBlazor();            
+            services.AddRazorPages();                  
             services.AddScoped<BadgetworkContext, BadgetworkContext>();            
             services.AddScoped<BaseRepository<Badget>, BaseRepository<Badget>>();
             services.AddScoped<BaseService<Badget>, BaseService<Badget>>();
+            services.AddScoped<NotificationService, NotificationService>();
+            services.AddScoped<DialogService, DialogService>();
+            services.AddScoped<NotificationMessage, NotificationMessage>();
             services.AddDbContext<BadgetworkContext>(options => options.UseSqlServer(Configuration["DataBaseSettings:StringConnection"]));
+            services.AddServerSideBlazor().AddCircuitOptions(opt => { opt.DetailedErrors = true; });
         }
 
         // This method gets called by the runtime. Use this metho   d to configure the HTTP request pipeline.
