@@ -27,9 +27,9 @@ else
     {
         <RadzenGrid AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" AllowPaging="true" PageSize="10"
                     AllowSorting="true" Data="@Badgets" TItem="Entities.Badget" ColumnWidth="200px">
-            <Columns>
-                <RadzenGridColumn TItem="Entities.Badget" Property="BadgetId" Title="Id" />
-                <RadzenGridColumn TItem="Entities.Badget" Property="Name" Title="Presupuesto" />
+            <Columns>              
+                <RadzenGridColumn TItem="Entities.Badget" Property="BadgetName" Title="Presupuesto" />
+                <RadzenGridColumn TItem="Entities.Badget" Property="CustomerName" Title="Cliente" />
                 <RadzenGridColumn TItem="Entities.Badget" Property="Total" Title="Total">
                     <Template Context="data">
                         @String.Format(new System.Globalization.CultureInfo("es-CO"), "{0:C}", data.Total)

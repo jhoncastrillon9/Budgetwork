@@ -31,14 +31,22 @@ namespace Budgetwork.Core
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages();                  
-            services.AddScoped<BadgetworkContext, BadgetworkContext>();            
+            //Contexto                  
+            services.AddScoped<BadgetworkContext, BadgetworkContext>();
+            services.AddDbContext<BadgetworkContext>(options => options.UseSqlServer(Configuration["DataBaseSettings:StringConnection"]));
+            //Modelo Acceso a Datos
             services.AddScoped<BaseRepository<Badget>, BaseRepository<Badget>>();
+            services.AddScoped<BaseRepository<BadgetItem>, BaseRepository<BadgetItem>>();
+            services.AddScoped<BaseRepository<UnitaryPrice>, BaseRepository<UnitaryPrice>>();
+            //Servicios
             services.AddScoped<BaseService<Badget>, BaseService<Badget>>();
+            services.AddScoped<BaseService<BadgetItem>, BaseService<BadgetItem>>();
+            services.AddScoped<BaseService<UnitaryPrice>, BaseService<UnitaryPrice>>();
+            //Servicios Fijos de Radzen Blazor
+            services.AddRazorPages();
             services.AddScoped<NotificationService, NotificationService>();
             services.AddScoped<DialogService, DialogService>();
-            services.AddScoped<NotificationMessage, NotificationMessage>();
-            services.AddDbContext<BadgetworkContext>(options => options.UseSqlServer(Configuration["DataBaseSettings:StringConnection"]));
+            services.AddScoped<NotificationMessage, NotificationMessage>();            
             services.AddServerSideBlazor().AddCircuitOptions(opt => { opt.DetailedErrors = true; });
         }
 

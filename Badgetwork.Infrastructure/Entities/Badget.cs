@@ -26,6 +26,7 @@ namespace Badgetwork.Infrastructure.Entities
         [Column(TypeName = "decimal (18,4)")]
         public decimal Total { get; set; }
         public DateTime DateCreation { get; set; }
+        public int CompanyId { get; set; }
         public virtual ICollection<BadgetItem> BadgetItems { get; set; }
     }
 }

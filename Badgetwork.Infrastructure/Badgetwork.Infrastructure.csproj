@@ -150,6 +150,7 @@
     <Compile Include="Context\BadgetworkContext.cs" />
     <Compile Include="Entities\Badget.cs" />
     <Compile Include="Entities\BadgetItem.cs" />
+    <Compile Include="Entities\UnitaryPrice.cs" />
     <Compile Include="Migrations\20200719202758_initial_create.cs" />
     <Compile Include="Migrations\20200719202758_initial_create.designer.cs">
       <DependentUpon>20200719202758_initial_create.cs</DependentUpon>
@@ -173,6 +174,14 @@
     <Compile Include="Migrations\20200731041015_Add-decimal-requires.cs" />
     <Compile Include="Migrations\20200731041015_Add-decimal-requires.designer.cs">
       <DependentUpon>20200731041015_Add-decimal-requires.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200803000425_add_UnitaryPrice6.cs" />
+    <Compile Include="Migrations\20200803000425_add_UnitaryPrice6.designer.cs">
+      <DependentUpon>20200803000425_add_UnitaryPrice6.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20200803001034_Required_not.cs" />
+    <Compile Include="Migrations\20200803001034_Required_not.designer.cs">
+      <DependentUpon>20200803001034_Required_not.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\BadgetworkContextModelSnapshot.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

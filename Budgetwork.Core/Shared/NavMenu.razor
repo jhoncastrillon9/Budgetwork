@@ -1,4 +1,6 @@
-﻿<div class="top-row pl-4 navbar navbar-dark">
+﻿@inject NavigationManager NavManager
+
+<div class="top-row pl-4 navbar navbar-dark">
     <a class="navbar-brand" href="">Presupuestos de Obra</a>
     <button class="navbar-toggler" @onclick="ToggleNavMenu">
         <span class="navbar-toggler-icon"></span>
@@ -16,20 +18,13 @@
             <NavLink class="nav-link" href="Budget">
                 <span class="oi oi-plus" aria-hidden="true"></span> Presupuestos
             </NavLink>
+            <NavLink class="nav-link" href="BudgetCreate">
+                <span class="oi oi-plus" aria-hidden="true"></span> Nuevo Presupuesto
+            </NavLink>
         </li>
-        <li class="nav-item px-3">
+        <li class="nav-item px-3" data-toggle="collapse" href="#collapseExample">
             <NavLink class="nav-link" href="Pruebas">
                 <span class="oi oi-plus" aria-hidden="true"></span> Pruebas
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </li>
-        <li class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
             </NavLink>
         </li>
     </ul>
@@ -44,4 +39,6 @@
     {
         collapseNavMenu = !collapseNavMenu;
     }
+
+
 }
