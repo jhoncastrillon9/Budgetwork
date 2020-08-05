@@ -6,6 +6,12 @@
 @inject DialogService dialogService
 @inject NavigationManager NavManager
 
+<style>
+    .ui-datatable-data td .ui-cell-data {
+        white-space: normal !important;
+    }
+</style>
+
 <h1>Crear nuevo presupuesto</h1>
 <div class="row" style="margin-right: 0px; margin-left: 0px;">
     <div style="margin-right: 15px;">
@@ -37,8 +43,9 @@
                         Data="@lisAPU"
                         Change="@(args => AddBadgetItem(args))"
                         TextProperty="Item"
-                        @bind-Value="search_item" 
-                        Style="width: 500px;margin-right: 15px;"/>
+                        @bind-Value="search_item"
+                        FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                        Style="width: 500px;margin-right: 15px;" />
 
 
     <RadzenButton ButtonStyle="ButtonStyle.Secondary"
@@ -47,66 +54,97 @@
     </RadzenButton>
 </div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">#</th>
-            <th scope="col">Descripción</th>
-            <th scope="col">Cantidad</th>
-            <th scope="col">Precio Unitario</th>
-            <th scope="col">Subtotal</th>
-            <th scope="col"></th>
-        </tr>
-    </thead>
-    <tbody>
-        @{int loop = 0; }
-        @foreach (var item in badgetItems.ToList())
-        {
-            loop++;
-            <tr>
-                <th scope="row">@loop</th>
-                <td>@item.Descripcion</td>
-                <td>@item.Quantity</td>
-                <td>@item.Price</td>
-                <td>@(item.Price*item.Quantity)</td>
-                <td>Borrar Editar</td>
-            </tr>
-        }
+<div style="margin-bottom:80px">
+    <RadzenGrid AllowFiltering="true"
+                FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                AllowPaging="true"
+                PageSize="10"
+                AllowSorting="true"
+                Data="@badgetItems"
+                TItem="Entities.BadgetItem"
+                EditMode="DataGridEditMode.Single"
+                @ref="itemsGrid">
+        <Columns>
+            <RadzenGridColumn TItem="Entities.BadgetItem" Property="Chapter" Title="Capitulo">
+                <EditTemplate Context="item">
+                    <RadzenTextBox @bind-Value="item.Chapter" Style="width:100%; display: block" Name="ShipName" />
+                    <RadzenRequiredValidator Text="Capitulo del item es requerido" Component="Chapter" Popup="true" />
+                </EditTemplate>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="Entities.BadgetItem" Property="Descripcion" Title="Descripción">
+                <EditTemplate Context="item">
+                    <RadzenTextBox @bind-Value="item.Descripcion" Style="width:100%; display: block" Name="Descripcion" />
+                    <RadzenRequiredValidator Text="Descripcion del item es requerido" Component="Descripcion" Popup="true" />
+                </EditTemplate>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="Entities.BadgetItem" Property="Measure" Title="Unidad">
+                <EditTemplate Context="item">
+                    <RadzenDropDown @bind-Value="item.Measure" Data="@listMeasure" TextProperty="Measure" ValueProperty="Measure" Style="width:100%" />
+                </EditTemplate>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="Entities.BadgetItem" Property="Quantity" Title="Cantidad">
+                <EditTemplate Context="item">
+                    <RadzenNumeric @bind-Value="item.Quantity" Style="width:100%" />
+                </EditTemplate>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="Entities.BadgetItem" Property="Price" Title="Precio unitario">
+                <Template Context="data">
+                    @String.Format(new System.Globalization.CultureInfo("es-CO"), "{0:C0}", data.Price)
+                </Template>
+                <EditTemplate Context="item">
+                    <RadzenNumeric @bind-Value="item.Price" Style="width:100%" />
+                </EditTemplate>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="Entities.BadgetItem" Property="Subtotal" Title="Subtotal">
+                <Template Context="data">
+                    @String.Format(new System.Globalization.CultureInfo("es-CO"), "{0:C0}", (data.Quantity * data.Price))
+                </Template>
+                <FooterTemplate>
+                    Total: <b>@String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C0}", badgetItems.Sum(o => o.Subtotal))</b>
+                </FooterTemplate>
+            </RadzenGridColumn>
 
-        <tr>
-            <th scope="row"></th>
-            <td> <RadzenTextBox Placeholder="Descripción" Style="margin-bottom: 20px" /></td>
-            <td> <RadzenNumeric data Placeholder="Cantidad" i TValue="int" Style="margin-bottom: 20px" /></td>
-            <td> <RadzenNumeric Name="price" Placeholder="Precio" TValue="int" Style="margin-bottom: 20px" /></td>
-            <td>$10.00</td>
-            <td>
-                <RadzenButton ButtonStyle="ButtonStyle.Success" Size="ButtonSize.Small" Text="Guardar">
-                </RadzenButton>
-                <RadzenButton ButtonStyle="ButtonStyle.Info" Size="ButtonSize.Small" Text="Limpiar">
-                </RadzenButton>
-            </td>
-        </tr>
+            <RadzenGridColumn TItem="Entities.BadgetItem"
+                              Context="Badgets"
+                              Bubble="false"
+                              Filterable="false"
+                              Sortable="false"
+                              TextAlign="TextAlign.Center">
+                <Template Context="item">
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Small" Text="Editar" Click="@(args => EditRow(item))">
+                    </RadzenButton>
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Size="ButtonSize.Small" Text="Eliminar" Click="@(args => DeleteRow(item))">
+                    </RadzenButton>
+                </Template>
+                <EditTemplate Context="item">
+                    <RadzenButton Text="Guardar Cambios" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Light" Click="@((args) => SaveRow(item))">
+                    </RadzenButton>
+                    <RadzenButton Text="Cancelar" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Click="@((args) => CancelEdit(item))">
+                    </RadzenButton>
+                </EditTemplate>
+            </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
 
-        <tr>
-            <th scope="row"></th>
-            <td> </td>
-            <td> </td>
-            <td align="right" style="font-weight:600">Subtotal:</td>
-            <td>$@badgetItems.Sum(x => x.Subtotal)</td>
-            <td> </td>
-        </tr>
-    </tbody>
-</table>
+</div>
 
-
-
+@foreach (var item in badgetItems)
+{
+    <span>@item.Chapter</span>
+    <span>@item.Descripcion</span>
+    <span>@item.Quantity</span>
+    <span>@item.Price</span>
+    <span>@item.Subtotal</span>
+}
 
 @code {
     private List<string> typesDocument = new List<string>() { "Cedula de Ciudadania", "Cedula de Extranjeria", "Pasaporte" };
+    private List<string> listMeasure = new List<string>() { "M2", "M3", "ML", "UND", "KG", "MES", "JGO", "HR", "CARGA", "KM", "HA", "UN", "M3-KM", "TON-M", "LT" };
     private Entities.Badget entity = new Entities.Badget();
     private List<Entities.BadgetItem> badgetItems = new List<Entities.BadgetItem>();
     private IEnumerable<Entities.UnitaryPrice> lisAPU;
     public string search_item { get; set; }
+    RadzenGrid<Entities.BadgetItem> itemsGrid;
 
 
     protected override async Task OnInitializedAsync()
@@ -123,6 +161,31 @@
         }
     }
 
+    private void EditRow(Entities.BadgetItem badgetItem)
+    {
+        itemsGrid.EditRow(badgetItem);
+    }
+
+    private void SaveRow(Entities.BadgetItem badgetItem)
+    {
+        badgetItem.Subtotal = badgetItem.Price * badgetItem.Quantity;
+        itemsGrid.UpdateRow(badgetItem);
+        itemsGrid.Reload();
+        itemsGrid.CancelEditRow(badgetItem);
+    }
+
+    private void CancelEdit(Entities.BadgetItem badgetItem)
+    {
+        itemsGrid.CancelEditRow(badgetItem);
+        itemsGrid.Reload();
+    }
+
+    private void DeleteRow(Entities.BadgetItem badgetItem)
+    {
+        badgetItems.Remove(badgetItem);
+        itemsGrid.Reload();
+    }
+
     private void AddBadgetItem(object item)
     {
 
@@ -131,6 +194,7 @@
         {
             badgetItems.Insert(0, new Entities.BadgetItem
             {
+                ExtraGuid = Guid.NewGuid(),
                 Chapter = aup.Chapter,
                 Descripcion = aup.Item,
                 Price = aup.Price,
@@ -143,6 +207,7 @@
             this.search_item = null;
         }
 
+        itemsGrid.Reload();
 
 
     }
